@@ -6,7 +6,7 @@ const connection = mysql.createConnection
         host: 'localHost',
         user: 'root',
         password: 'Anfernee0224',
-        database: 'UserData'
+        database: 'just_do_it'
     }
 )
 connection.connect()
