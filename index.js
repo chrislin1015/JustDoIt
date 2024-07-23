@@ -9,15 +9,16 @@ let todos = []
 
 function requestLinstener(req, res)
 {
-    console.log(req)
-    successHandle(res, todos)
-
     let post_data = ""
     req.on('data', (chunk) =>{
         post_data += chunk
     })
 
-    if (req.url === '/signin' && req.method === 'POST')
+    if (req.url === '/todos' && req.method === 'GET')
+    {
+
+    }
+    else if (req.url === '/signin' && req.method === 'POST')
     {
         req.on('end', () => {
             let json_data = JSON.parse(post_data)
@@ -28,6 +29,7 @@ function requestLinstener(req, res)
     {
         req.on('end', () => {
             let json_data = JSON.parse(post_data)
+            console.log(`signup : ${json_data}`)
             loginProcess.signup(json_data, res)
         })
     }
