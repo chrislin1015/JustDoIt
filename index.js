@@ -7,7 +7,7 @@ const loginProcess = require('./loginProcess')
 
 let todos = []
 
-function requestLinstener(req, res)
+function RequestLinstener(req, res)
 {
     let post_data = ""
     req.on('data', (chunk) =>{
@@ -21,18 +21,32 @@ function requestLinstener(req, res)
     else if (req.url === '/signin' && req.method === 'POST')
     {
         req.on('end', () => {
-            let json_data = JSON.parse(post_data)
-            loginProcess.signin(json_data, res)
+            try
+            {
+                let json_data = JSON.parse(post_data)
+                loginProcess.signIn(json_data, res)
+            }
+            catch (error)
+            {
+                console.log(error)
+                errorHandle(res, error)
+            }
         })
     }
     else if (req.url === '/signup' && req.method === 'POST')
     {
         req.on('end', () => {
-            let json_data = JSON.parse(post_data)
-            console.log(`signup : ${json_data}`)
-            loginProcess.signup(json_data, res)
+            try
+            {
+                let json_data = JSON.parse(post_data)
+                loginProcess.signUp(json_data, res)
+            }
+            catch (error)
+            {
+                errorHandle(res, error)
+            }
         })
     }
 }
 
-const server = http.createServer(requestLinstener).listen(process.env.PORT || 3005)
+const server = http.createServer(RequestLinstener).listen(process.env.PORT || 3005)
