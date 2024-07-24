@@ -4,13 +4,13 @@ const userData = require('./userData')
 const PASSWORD_MIN_LENGTH = 6
 const PASSWORD_MAX_LENGTH = 20
 
-function validateEmail(email) 
+function ValidateEmail(email) 
 {
     const re = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9.-]+\.)+[a-zA-Z]{2,}$/
     return re.test(email)
 }
 
-function validatePassword(password)
+function ValidatePassword(password)
 {
     const regexLettersAndNumbers = /^[a-zA-z0-9]+$/
     const reqexUpcase = /[A-Z]/
@@ -50,7 +50,7 @@ function validatePassword(password)
     return true
 }
 
-function signIn(json_data, res)
+function SignIn(json_data, res)
 {
     if (json_data === undefined || json_data.email === undefined || json_data.password === undefined)
     {
@@ -58,20 +58,22 @@ function signIn(json_data, res)
         return;
     }
 
-    if (!validateEmail(json_data.email))
+    if (!ValidateEmail(json_data.email))
     {
         errorHandle(res, 'Email 格式錯誤')
         return;
     }
 
-    if (!validatePassword(json_data.password))
+    if (!ValidatePassword(json_data.password))
     {
         errorHandle(res, 'Password 格式錯誤')
         return;
     }
+
+    userData.signIn(json_data, res)
 }
 
-function signUp(json_data, res)
+function SignUp(json_data, res)
 {
     if (json_data === undefined || json_data.email === undefined || json_data.password === undefined || json_data.name === undefined)
     {
@@ -79,13 +81,13 @@ function signUp(json_data, res)
         return;
     }
 
-    if (!validateEmail(json_data.email))
+    if (!ValidateEmail(json_data.email))
     {
         errorHandle(res, 'Email 格式錯誤')
         return;
     }
 
-    if (!validatePassword(json_data.password))
+    if (!ValidatePassword(json_data.password))
     {
         errorHandle(res, `Password 格式錯誤 : ${json_data.password}`)
         return;
@@ -96,6 +98,6 @@ function signUp(json_data, res)
 
 module.exports = 
 {
-    signin: signIn,
-    signup: signUp
+    signIn: SignIn,
+    signUp: SignUp
 }

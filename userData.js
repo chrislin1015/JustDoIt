@@ -53,7 +53,75 @@ function IsAccountExist(json_data, res, nextStep)
                 throw error
             }
 
+            if (nextStep === undefined) 
+            {
+                connection.end()
+                connection = undefined
+                return
+            }
+
             const count = results[0].count
+            nextStep(json_data, res, count)
+        })
+}
+
+function ValidatePassword(json_data, res, nextStep)
+{
+    const query = 'SELECT * FROM user_data WHERE email = ?';
+    connection.query(
+        query,
+        [json_data.email],
+        function(error, results, field)
+        {
+            if (error) 
+            {
+                errorHandle(res, 'MySQL 連接失敗: ' + error.stack)
+                connection.end()
+                connection = undefined
+                throw error
+            }
+
+            if (results.length == 0)
+            {
+                errorHandle(res, '帳號尚未註冊')
+                connection.end()
+                connection = undefined
+                return
+            }
+
+            const user = results[0]
+            if (user.password === json_data.password)
+            {
+                nextStep(json_data, res)
+            }
+            else
+            {
+                errorHandle(res, '密碼錯誤')
+                connection.end()
+                connection = undefined
+            }
+        })
+}
+
+function SignIn(json_data, res)
+{
+    ConnectToMySQL(json_data, res, (json_data, res) =>
+    {
+        ValidatePassword(json_data, res, (json_data, res) =>
+        {
+            successHandle(res, "登入成功")
+            connection.end()
+            connection = undefined
+        })
+    })
+}
+
+function SignUp(json_data, res)
+{
+    ConnectToMySQL(json_data, res, (json_data, res) =>
+    {
+        IsAccountExist(json_data, res, (json_data, res, count) =>
+        {
             if (count > 0)
             {
                 errorHandle(res,  `Email ${json_data.email} 已經存在。`)
@@ -62,33 +130,6 @@ function IsAccountExist(json_data, res, nextStep)
                 return
             }
 
-            if (nextStep === undefined) 
-            {
-                connection.end()
-                connection = undefined
-                return
-            }
-            nextStep(json_data, res)
-        })
-}
-
-function Login(email, password)
-{
-    
-}
-
-function SignUp(json_data, res)
-{
-    let result =
-    {
-        result: true,
-        message: ""
-    }
-
-    ConnectToMySQL(json_data, res, (json_data, res) =>
-    {
-        result = IsAccountExist(json_data, res, (json_data, res) =>
-        {
             let date = new Date()
             let year = date.getFullYear()
             let month = date.getMonth()
@@ -122,6 +163,6 @@ function SignUp(json_data, res)
 
 module.exports = 
 {
-    login: Login,
+    signIn: SignIn,
     signUp: SignUp
 }
