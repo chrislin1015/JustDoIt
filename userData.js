@@ -89,6 +89,13 @@ function SignUp(json_data, res)
     {
         result = IsAccountExist(json_data, res, (json_data, res) =>
         {
+            let date = new Date()
+            let year = date.getFullYear()
+            let month = date.getMonth()
+            let day = date.getDay()
+            let create_date = `${year}-${month}-${day}`
+            json_data.create_date = create_date
+
             let insert = `INSERT INTO user_data SET ?`
             connection.query(
                 insert,
@@ -105,7 +112,6 @@ function SignUp(json_data, res)
                     }
 
                     successHandle(res, "MySQL 新增資料成功")
-
                     connection.end()
                     connection = undefined
                 }
