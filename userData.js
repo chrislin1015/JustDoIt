@@ -1,8 +1,25 @@
 const mysql = require('mysql2')
+const bcrypt = require('bcrypt')
 const errorHandle = require('./errorHandle')
 const successHandle = require('./successHandle')
 
 let connection = undefined
+//設定加密強度
+const saltRounds = 10
+
+function Fail(res, message)
+{
+    errorHandle(res, message)
+    connection.end()
+    connection = undefined
+}
+
+function Success(res, message)
+{
+    successHandle(res, message)
+    connection.end()
+    connection = undefined
+}
 
 function ConnectToMySQL(json_data, res, nextStep)
 {
@@ -18,17 +35,13 @@ function ConnectToMySQL(json_data, res, nextStep)
         {
             if (error) 
             {
-                errorHandle(res, 'MySQL 連接失敗: ' + error.stack)
-                console.error('MySQL 連接失敗: ' + error.stack)
-                connection.end()
-                connection = undefined
+                Fail(res, 'MySQL 連接失敗: ' + error.stack)
                 throw error
             }
 
             if (nextStep === undefined) 
             {
-                connection.end()
-                connection = undefined
+                Fail(res, 'nextSetp 沒有設定')
                 return
             }
             nextStep(json_data, res)
@@ -46,17 +59,13 @@ function IsAccountExist(json_data, res, nextStep)
         {
             if (error) 
             {
-                errorHandle(res, 'MySQL 連接失敗: ' + error.stack)
-                console.error('MySQL 連接失敗: ' + error.stack)
-                connection.end()
-                connection = undefined
+                Fail(res, 'MySQL 連接失敗: ' + error.stack)
                 throw error
             }
 
             if (nextStep === undefined) 
             {
-                connection.end()
-                connection = undefined
+                Fail(res, 'nextSetp 沒有設定')
                 return
             }
 
@@ -75,31 +84,29 @@ function ValidatePassword(json_data, res, nextStep)
         {
             if (error) 
             {
-                errorHandle(res, 'MySQL 連接失敗: ' + error.stack)
-                connection.end()
-                connection = undefined
+                Fail(res, 'MySQL 連接失敗: ' + error.stack)
                 throw error
             }
 
             if (results.length == 0)
             {
-                errorHandle(res, '帳號尚未註冊')
-                connection.end()
-                connection = undefined
+                Fail(res, '帳號尚未註冊')
                 return
             }
 
             const user = results[0]
-            if (user.password === json_data.password)
+            bcrypt.compare(json_data.password, user.password, (error, isMatch) =>
             {
-                nextStep(json_data, res)
-            }
-            else
-            {
-                errorHandle(res, '密碼錯誤')
-                connection.end()
-                connection = undefined
-            }
+                if (error) throw error
+                if (isMatch)
+                {
+                    nextStep(json_data, res)
+                }
+                else
+                {
+                    Fail(res, '密碼錯誤')
+                }
+            })
         })
 }
 
@@ -109,9 +116,7 @@ function SignIn(json_data, res)
     {
         ValidatePassword(json_data, res, (json_data, res) =>
         {
-            successHandle(res, "登入成功")
-            connection.end()
-            connection = undefined
+            Success(res, "登入成功")
         })
     })
 }
@@ -124,9 +129,7 @@ function SignUp(json_data, res)
         {
             if (count > 0)
             {
-                errorHandle(res,  `Email ${json_data.email} 已經存在。`)
-                connection.end()
-                connection = undefined
+                Fail(res, `Email ${json_data.email} 已經存在。`)
                 return
             }
 
@@ -137,26 +140,30 @@ function SignUp(json_data, res)
             let create_date = `${year}-${month}-${day}`
             json_data.create_date = create_date
 
-            let insert = `INSERT INTO user_data SET ?`
-            connection.query(
-                insert,
-                json_data,
-                function(error, results, field)
+            bcrypt.hash(json_data.password, saltRounds, (error, hash) =>
+            {
+                if (error) 
                 {
-                    if (error)
-                    {
-                        errorHandle(res, 'MySQL 新增資料失敗: ' + error.stack)
-                        console.error('MySQL 新增資料失敗: ' + error.stack)
-                        connection.end()
-                        connection = undefined
-                        throw error
-                    }
-
-                    successHandle(res, "MySQL 新增資料成功")
-                    connection.end()
-                    connection = undefined
+                    Fail(res, '密碼加密失敗 : ' + error.stack)
+                    throw error;
                 }
-            )
+
+                json_data.password = hash
+                let insert = `INSERT INTO user_data SET ?`
+                connection.query(
+                    insert,
+                    json_data,
+                    function(error, results, field)
+                    {
+                        if (error)
+                        {
+                            Fail(res, 'MySQL 新增資料失敗: ' + error.stack)
+                            throw error
+                        }
+                        Success(res, "MySQL 新增資料成功")
+                    }
+                )
+            })
         })
     })   
 }
