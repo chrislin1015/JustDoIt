@@ -135,8 +135,10 @@ function SignUp(json_data, res)
 
             let date = new Date()
             let year = date.getFullYear()
-            let month = date.getMonth()
-            let day = date.getDay()
+            // javascript 中 Date 物件的 getMonth 函式回傳的是 0 開始的索引值 0~11 
+            let month = date.getMonth() + 1
+            // getDay 回傳的是星期幾，getDate 回傳的才是日期
+            let day = date.getDate()
             let create_date = `${year}-${month}-${day}`
             json_data.create_date = create_date
 
