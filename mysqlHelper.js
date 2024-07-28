@@ -110,5 +110,5 @@ module.exports =
     fail: Fail,
     success: Success,
     connection: GetConnection,
-    todos: FetchTodos
+    todos: FetchTodos,
 }

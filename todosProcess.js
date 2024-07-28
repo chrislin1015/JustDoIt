@@ -14,7 +14,13 @@ function Add(json_data, res)
 
 function Delete(json_data, res)
 {
-    
+    if (json_data === undefined || json_data.email === undefined || json_data.uid === undefined)
+    {
+        errorHandle(res, '資料錯誤')
+        return;
+    }
+
+    todosData.delete(json_data, res)
 }
 
 module.exports =
