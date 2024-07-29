@@ -3,8 +3,6 @@ const errorHandle = require('./errorHandle')
 const loginProcess = require('./loginProcess')
 const todosProcess = require('./todosProcess')
 
-let todos = []
-
 function ProcessPostData(method, res, post_data)
 {
     try
@@ -56,6 +54,13 @@ function RequestLinstener(req, res)
         req.on('end', () =>
         {
             ProcessPostData(todosProcess.delete, res, post_data)
+        })
+    }
+    else if (req.url === '/change' && req.method === 'PATCH')
+    {
+        req.on('end', () =>
+        {
+            ProcessPostData(todosProcess.change, res, post_data)            
         })
     }
 }

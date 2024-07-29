@@ -15,12 +15,15 @@ function Add(json_data, res)
                 return
             }
 
-            let todoData = {
-                uid: uuidv4(),
-                contend: json_data.todo,
+            let todoData = 
+            {
+                id: uuidv4(),
+                content: json_data.content,
                 email: json_data.email,
-                date: helper.createDate()
+                date: helper.createDate(),
+                done: 0
             }
+
             let query = `INSERT INTO todos SET ?`
             mysqlHelper.connection().query(
                 query,
@@ -33,8 +36,7 @@ function Add(json_data, res)
                         return
                     }
                     mysqlHelper.todos(json_data.email, res)
-                }
-            )
+                })
         })
     })
 }
@@ -51,10 +53,40 @@ function Delete(json_data, res)
                 return
             }
 
-            let query = `DELETE FROM todos WHERE email = ? AND uid = ?`
+            let query = `DELETE FROM todos WHERE email = ? AND id = ?`
             mysqlHelper.connection().query(
                 query,
-                [json_data.email, json_data.uid],
+                [json_data.email, json_data.id],
+                function(error, results, field)
+                {
+                    if (error)
+                    {
+                        errorHandle(res, error)
+                        return
+                    }
+                    mysqlHelper.todos(json_data.email, res)
+                }
+            )
+        })
+    })
+}
+
+function Change(json_data, res)
+{
+    mysqlHelper.connect(json_data, res, (json_data, res) =>
+    {
+        mysqlHelper.isAccountExist(json_data, res, (json_data, res, count) =>
+        {
+            if (count == 0)
+            {
+                mysqlHelper.fail(res, "帳號尚未註冊")
+                return
+            }
+
+            let query = `UPDATE todos SET content = ? WHERE email = ? AND id = ?`
+            mysqlHelper.connection().query(
+                query,
+                [json_data.content, json_data.email, json_data.id],
                 function(error, results, field)
                 {
                     if (error)
@@ -71,5 +103,6 @@ function Delete(json_data, res)
 
 module.exports = {
     add: Add,
-    delete: Delete
+    delete: Delete,
+    change: Change
 }

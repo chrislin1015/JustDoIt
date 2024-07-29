@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
-const mysqlHelper = require('./mysqlHelper')
+const mysqlHelper = require('./mysqlHelper');
+const helper = require('./helper');
 
 //設定加密強度
 const saltRounds = 10
@@ -69,14 +70,7 @@ function SignUp(json_data, res)
                 return
             }
 
-            let date = new Date()
-            let year = date.getFullYear()
-            // javascript 中 Date 物件的 getMonth 函式回傳的是 0 開始的索引值 0~11 
-            let month = date.getMonth() + 1
-            // getDay 回傳的是星期幾，getDate 回傳的才是日期
-            let day = date.getDate()
-            let create_date = `${year}-${month}-${day}`
-            json_data.create_date = create_date
+            json_data.date = helper.createDate()
 
             bcrypt.hash(json_data.password, saltRounds, (error, hash) =>
             {
