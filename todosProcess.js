@@ -34,9 +34,21 @@ function Change(json_data, res)
     todosData.change(json_data, res)
 }
 
+function Done(json_data, res)
+{
+    if (json_data === undefined || json_data.email === undefined || json_data.id === undefined || json_data.done === undefined)
+    {
+        errorHandle(res, '資料錯誤')
+        return
+    }
+
+    todosData.done(json_data, res)
+}
+
 module.exports =
 {
     add : Add,
     delete : Delete,
     change : Change,
+    done : Done
 }

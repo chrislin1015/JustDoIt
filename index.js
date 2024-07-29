@@ -63,6 +63,13 @@ function RequestLinstener(req, res)
             ProcessPostData(todosProcess.change, res, post_data)            
         })
     }
+    else if (req.url === '/done' && req.method === 'PATCH')
+    {
+        req.on('end', () =>
+        {
+            ProcessPostData(todosProcess.done, res, post_data)
+        })
+    }
 }
 
 const server = http.createServer(RequestLinstener).listen(process.env.PORT || 3005)
