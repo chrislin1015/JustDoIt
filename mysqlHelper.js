@@ -91,14 +91,17 @@ function FetchTodos(email, res)
             }
             console.log(results)
             let todosData = []
-            results.forEach(element => {
-                let data = {
-                    uuid: element.uid,
-                    todo: element.contend,
-                    date: element.date
-                }
-                todosData.push(data)
-            });
+            results.forEach(element => 
+                {
+                    let data = 
+                    {
+                        id: element.id,
+                        content: element.content,
+                        date: element.date,
+                        done: element.done
+                    }
+                    todosData.push(data)
+                });
             successHandle(res, todosData)
         })
 }

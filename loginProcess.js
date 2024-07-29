@@ -1,54 +1,6 @@
 const errorHandle = require('./errorHandle')
 const userData = require('./userData')
 const helper = require('./helper')
-// const PASSWORD_MIN_LENGTH = 6
-// const PASSWORD_MAX_LENGTH = 20
-
-// function ValidateEmail(email) 
-// {
-//     const re = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9.-]+\.)+[a-zA-Z]{2,}$/
-//     return re.test(email)
-// }
-
-// function ValidatePassword(password)
-// {
-//     const regexLettersAndNumbers = /^[a-zA-z0-9]+$/
-//     const reqexUpcase = /[A-Z]/
-//     const reqexLowcase = /[a-z]/
-//     const reqexNumber = /[0-9]/
-
-//     if (password.length < PASSWORD_MIN_LENGTH || password.length > PASSWORD_MAX_LENGTH) 
-//     {
-//         console.log("長度不正確");
-//         return false
-//     }
-
-//     if (!regexLettersAndNumbers.test(password))
-//     {
-//         console.log("regexLettersAndNumbers");
-//         return false
-//     }
-
-//     if (!reqexUpcase.test(password))
-//     {
-//         console.log("reqexUpcase");
-//         return false
-//     }
-
-//     if (!reqexLowcase.test(password))
-//     {
-//         console.log("reqexLowcase");
-//         return false
-//     }
-
-//     if (!reqexNumber.test(password))
-//     {
-//         console.log("reqexNumber");
-//         return false
-//     }
-
-//     return true
-// }
 
 function SignIn(json_data, res)
 {
