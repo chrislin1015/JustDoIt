@@ -101,8 +101,39 @@ function Change(json_data, res)
     })
 }
 
+function Done(json_data, res)
+{
+    mysqlHelper.connect(json_data, res, (json_data, res) =>
+    {
+        mysqlHelper.isAccountExist(json_data, res, (json_data, res, count) =>
+        {
+            if (count == 0)
+            {
+                mysqlHelper.fail(res, "帳號尚未註冊")
+                return
+            }
+
+            let query = `UPDATE todos SET done = ? WHERE email = ? AND id = ?`
+            mysqlHelper.connection().query(
+                query,
+                [json_data.done, json_data.email, json_data.id],
+                function(error, results, field)
+                {
+                    if (error)
+                    {
+                        errorHandle(res, error)
+                        return
+                    }
+                    mysqlHelper.todos(json_data.email, res)
+                }
+            )
+        })
+    })
+}
+
 module.exports = {
     add: Add,
     delete: Delete,
-    change: Change
+    change: Change,
+    done: Done
 }
