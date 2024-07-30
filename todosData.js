@@ -1,7 +1,6 @@
 const mysqlHelper = require('./mysqlHelper')
 const { v4: uuidv4 } = require('uuid')
 const helper = require('./helper')
-const errorHandle = require('./errorHandle')
 
 function Add(json_data, res)
 {
@@ -61,7 +60,7 @@ function Delete(json_data, res)
                 {
                     if (error)
                     {
-                        errorHandle(res, error)
+                        mysqlHelper.fail(res, error)
                         return
                     }
                     mysqlHelper.todos(json_data.email, res)
@@ -91,7 +90,7 @@ function Change(json_data, res)
                 {
                     if (error)
                     {
-                        errorHandle(res, error)
+                        mysqlHelper.fail(res, error)
                         return
                     }
                     mysqlHelper.todos(json_data.email, res)
@@ -121,7 +120,7 @@ function Done(json_data, res)
                 {
                     if (error)
                     {
-                        errorHandle(res, error)
+                        mysqlHelper.fail(res, error)
                         return
                     }
                     mysqlHelper.todos(json_data.email, res)
@@ -131,9 +130,27 @@ function Done(json_data, res)
     })
 }
 
+function Fetch(json_data, res)
+{
+    mysqlHelper.connect(json_data, res, (json_data, res) =>
+    {
+        mysqlHelper.isAccountExist(json_data, res, (json_data, res, count) =>
+        {
+            if (count == 0)
+            {
+                mysqlHelper.fail(res, "帳號尚未註冊")
+                return
+            }
+
+            mysqlHelper.todos(json_data.email, res)
+        })
+    })
+}
+
 module.exports = {
     add: Add,
     delete: Delete,
     change: Change,
-    done: Done
+    done: Done,
+    fetch: Fetch
 }

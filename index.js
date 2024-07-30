@@ -1,5 +1,5 @@
 const http = require('http')
-const errorHandle = require('./errorHandle')
+const responser = require('./responser')
 const loginProcess = require('./loginProcess')
 const todosProcess = require('./todosProcess')
 
@@ -13,20 +13,24 @@ function ProcessPostData(method, res, post_data)
     catch (error)
     {
         console.log(error)
-        errorHandle(res, error)
+        responser.error(res, error)
     }
 }
 
 function RequestLinstener(req, res)
 {
     let post_data = ""
-    req.on('data', (chunk) =>{
-        post_data += chunk
-    })
+    req.on('data', (chunk) =>
+        {
+            post_data += chunk
+        })
 
     if (req.url === '/todos' && req.method === 'GET')
     {
-
+        req.on('end', () => 
+        {
+            ProcessPostData(todosProcess.fetch, res, post_data)
+        })
     }
     else if (req.url === '/signin' && req.method === 'POST')
     {
