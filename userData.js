@@ -7,7 +7,7 @@ const saltRounds = 10
 
 function ValidatePassword(json_data, res, nextStep)
 {
-    const query = 'SELECT * FROM user_data WHERE email = ?';
+    const query = 'SELECT * FROM users WHERE email = ?';
     if (mysqlHelper.connection() === undefined)
     {
         console.log('Connection is undefined')
@@ -21,13 +21,13 @@ function ValidatePassword(json_data, res, nextStep)
         {
             if (error) 
             {
-                Fail(res, 'MySQL 連接失敗: ' + error.stack)
+                mysqlHelper.fail(res, 'MySQL 連接失敗: ' + error.stack)
                 throw error
             }
 
             if (results.length == 0)
             {
-                Fail(res, '帳號尚未註冊')
+                mysqlHelper.fail(res, '帳號尚未註冊')
                 return
             }
 
@@ -41,7 +41,7 @@ function ValidatePassword(json_data, res, nextStep)
                 }
                 else
                 {
-                    Fail(res, '密碼錯誤')
+                    mysqlHelper.fail(res, '密碼錯誤')
                 }
             })
         })
@@ -76,12 +76,12 @@ function SignUp(json_data, res)
             {
                 if (error) 
                 {
-                    Fail(res, '密碼加密失敗 : ' + error.stack)
+                    mysqlHelper.fail(res, '密碼加密失敗 : ' + error.stack)
                     throw error;
                 }
 
                 json_data.password = hash
-                let insert = `INSERT INTO user_data SET ?`
+                let insert = `INSERT INTO users SET ?`
                 mysqlHelper.connection().query(
                     insert,
                     json_data,

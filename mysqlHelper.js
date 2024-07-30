@@ -1,6 +1,5 @@
 const mysql = require('mysql2')
-const errorHandle = require('./errorHandle')
-const successHandle = require('./successHandle')
+const responser = require('./responser')
 
 let connection = undefined
 
@@ -11,19 +10,19 @@ function GetConnection()
 
 function Fail(res, message)
 {
-    errorHandle(res, message)
+    responser.error(res, message)
     connection.end()
     connection = undefined
 }
 
 function Success(res, message)
 {
-    successHandle(res, message)
+    responser.success(res, message)
     connection.end()
     connection = undefined
 }
 
-function ConnectToMySQL(json_data, res, nextStep)
+function Connect(json_data, res, nextStep)
 {
     connection = mysql.createConnection(
         {
@@ -41,19 +40,14 @@ function ConnectToMySQL(json_data, res, nextStep)
                 throw error
             }
 
-            if (nextStep === undefined) 
-            {
-                Fail(res, 'nextSetp 沒有設定')
-                return
-            }
             nextStep(json_data, res)
         })
 }
 
-function IsAccountExist(json_data, res, nextStep)
+function IsSignUp(json_data, res, nextStep)
 {
     //判斷是否已經註冊過
-    let checkExist = `SELECT COUNT(*) AS count FROM user_data WHERE email = ?`;
+    let checkExist = `SELECT COUNT(*) AS count FROM users WHERE email = ?`;
     connection.query(
         checkExist, 
         [json_data.email], 
@@ -65,18 +59,11 @@ function IsAccountExist(json_data, res, nextStep)
                 throw error
             }
 
-            if (nextStep === undefined) 
-            {
-                Fail(res, 'nextSetp 沒有設定')
-                return
-            }
-
-            const count = results[0].count
-            nextStep(json_data, res, count)
+            nextStep(json_data, res, results[0].count)
         })
 }
 
-function FetchTodos(email, res)
+function Todos(email, res)
 {
     let query = `SELECT * FROM todos WHERE email = ?`;
     connection.query(
@@ -102,16 +89,16 @@ function FetchTodos(email, res)
                     }
                     todosData.push(data)
                 });
-            successHandle(res, todosData)
+                Success(res, todosData)
         })
 }
 
 module.exports = 
 {
-    connect: ConnectToMySQL,
-    isAccountExist: IsAccountExist,
+    connect: Connect,
+    isAccountExist: IsSignUp,
     fail: Fail,
     success: Success,
     connection: GetConnection,
-    todos: FetchTodos,
+    todos: Todos,
 }
