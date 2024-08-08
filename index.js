@@ -1,4 +1,5 @@
 const http = require('http')
+const header = require('./commonDefine')
 const responser = require('./responser')
 const loginProcess = require('./loginProcess')
 const todosProcess = require('./todosProcess')
@@ -8,6 +9,7 @@ function ProcessPostData(method, res, post_data)
     try
     {
         let json_data = JSON.parse(post_data)
+        console.log(json_data)
         method(json_data, res)
     }
     catch (error)
@@ -25,7 +27,15 @@ function RequestLinstener(req, res)
             post_data += chunk
         })
 
-    if (req.url === '/todos' && req.method === 'GET')
+    console.log(req.url)
+    console.log(req.method)
+
+    if (req.method === 'OPTIONS')
+    {
+        res.writeHeader(200, header)
+        res.end()
+    }
+    else if (req.url === '/todos' && req.method === 'GET')
     {
         req.on('end', () => 
         {
@@ -34,6 +44,7 @@ function RequestLinstener(req, res)
     }
     else if (req.url === '/signin' && req.method === 'POST')
     {
+        console.log("siginin")
         req.on('end', () => 
         {
             ProcessPostData(loginProcess.signIn, res, post_data)

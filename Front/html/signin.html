@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css//common.css" />
+    <link rel="stylesheet" href="../css/signin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- <script src="../../helper.js"></script> -->
+    <script src="../js/signin.js" defer></script>
+    <script src="../js/passwordEye.js" defer></script>
+  </head>
+  <body>
+    <div class="signin-container">
+      <div class="top-container">
+        <div class="green-circle big-circle bgct order-top"></div>
+        <div class="black-circle big-circle bbct-1 order-middle"></div>
+        <div class="black-circle big-circle bbct-2 order-middle"></div>
+      </div>
+      <div class="middle-container">
+        <h1>Sign In</h1>
+        <p>User Name</p>
+        <input class="input-username input-style" type="Text" />
+        <p>Password</p>
+        <div class="password-container">
+          <input class="input-password input-style" type="Password" />
+          <img class="eye-icon" src="../image/closed-eyes.png" width="16px" />
+        </div>
+        <p class="forgot-password">Forgot password?</p>
+        <div class="black-circle small-circle submit-circle">
+          <div class="arrow-line"></div>
+          <div class="arrow-top"></div>
+          <div class="arrow-down"></div>
+        </div>
+      </div>
+      <div class="error-message hide">Error</div>
+      <div class="foot-container">
+        <div class="green-circle middle-circle sgct"></div>
+        <div class="to-signup">
+          New member?
+          <a href="">Sign Up</a>
+        </div>
+        <div class="black-circle middle-circle sbct"></div>
+      </div>
+    </div>
+  </body>
+</html>
