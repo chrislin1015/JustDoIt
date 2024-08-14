@@ -1,8 +1,10 @@
 const http = require('http')
-const header = require('./commonDefine')
+const common = require('./commonDefine')
 const responser = require('./responser')
 const loginProcess = require('./loginProcess')
 const todosProcess = require('./todosProcess')
+const jwt = require('jsonwebtoken')
+const { error } = require('console')
 
 function ProcessPostData(method, res, post_data)
 {
@@ -19,6 +21,29 @@ function ProcessPostData(method, res, post_data)
     }
 }
 
+function handleAuthorizationToken(req, res, method)
+{
+    const auth = req.headers['authorization']
+    if (auth)
+    {
+        //auth => "Bearer your_jwt"
+        const token = auth.split(' ')[1]
+        jwt.verify(token, common.SECRET_KEY, (error, decoded) => {
+            if (error) {
+                res.statusCode = 403
+                res.end('Invalid Token')
+            }
+            else {
+                method(decoded, res)
+            }
+        })
+    }
+    else {
+        res.statusCode = 403
+        res.end('No token provided')
+    }
+}
+
 function RequestLinstener(req, res)
 {
     let post_data = ""
@@ -27,19 +52,17 @@ function RequestLinstener(req, res)
             post_data += chunk
         })
 
-    console.log(req.url)
-    console.log(req.method)
-
     if (req.method === 'OPTIONS')
     {
-        res.writeHeader(200, header)
+        console.log('options')
+        res.writeHeader(200, common.header)
         res.end()
     }
     else if (req.url === '/todos' && req.method === 'GET')
     {
         req.on('end', () => 
         {
-            ProcessPostData(todosProcess.fetch, res, post_data)
+            handleAuthorizationToken(req, res, todosProcess.fetch)
         })
     }
     else if (req.url === '/signin' && req.method === 'POST')
@@ -54,6 +77,7 @@ function RequestLinstener(req, res)
     {
         req.on('end', () => 
         {
+            console.log('signup')
             ProcessPostData(loginProcess.signUp, res, post_data)
         })
     }

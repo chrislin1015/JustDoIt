@@ -1,18 +1,28 @@
 const bcrypt = require('bcrypt')
-const mysqlHelper = require('./mysqlHelper');
-const helper = require('./helper');
+const mysqlHelper = require('./mysqlHelper')
+const helper = require('./helper')
+const jwt = require('jsonwebtoken')
+const common = require('./commonDefine')
 
 //設定加密強度
 const saltRounds = 10
 
+function getJWT(json_data, res)
+{
+    const user = { email: json_data.email, name: json_data.name }
+    const token = jwt.sign(user, common.SECRET_KEY, { expiresIn: '1h'})
+    res.writeHead(200, common.header);
+    res.end(JSON.stringify({ token }));
+}
+
 function ValidatePassword(json_data, res, nextStep)
 {
-    const query = 'SELECT * FROM users WHERE email = ?';
+    const query = 'SELECT * FROM users WHERE email = ?'
     if (mysqlHelper.connection() === undefined)
     {
         console.log('Connection is undefined')
         mysqlHelper.fail(res, 'Connection is undefined')
-        return;
+        return
     }
     mysqlHelper.connection().query(
         query,
@@ -37,6 +47,7 @@ function ValidatePassword(json_data, res, nextStep)
                 if (error) throw error
                 if (isMatch)
                 {
+                    json_data.name = user.name
                     nextStep(json_data, res)
                 }
                 else
@@ -53,7 +64,8 @@ function SignIn(json_data, res)
     {
         ValidatePassword(json_data, res, (json_data, res) =>
         {
-            mysqlHelper.success(res, "登入成功")
+            getJWT(json_data, res)
+            mysqlHelper.close()
         })
     })
 }
@@ -92,7 +104,8 @@ function SignUp(json_data, res)
                             mysqlHelper.fail(res, 'MySQL 新增資料失敗: ' + error.stack)
                             throw error
                         }
-                        mysqlHelper.success(res, "MySQL 新增資料成功")
+                        getJWT(json_data, res)
+                        mysqlHelper.close()
                     }
                 )
             })

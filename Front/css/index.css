@@ -1,0 +1,101 @@
+.top-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-menu {
+    min-width: 30%;
+    display: flex;
+    justify-content: left;
+    align-items: end;
+    gap: 10px;
+    padding-left: 20px;
+}
+
+.logo {
+    min-width: 35%;
+    text-align: center;
+    font-size: x-large;
+    font-weight: 700;
+}
+
+.right-menu {
+    min-width: 30%;
+    display: flex;
+    justify-content:right;
+    align-items: end;
+    gap: 10px;
+    padding-right: 20px;
+}
+
+.signin {
+    padding: 5px 10px;
+}
+
+.signup {
+    background: #b8fadd;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.log-out {
+    padding: 5px 10px;
+}
+
+.reload-menu {
+    background-image: url('../image/Refresh_icon.svg.png');
+    background-size: cover;       /* 確保圖片覆蓋整個元素 */
+    background-position: center;  /* 將圖片置中 */
+    background-repeat: no-repeat; /* 禁止背景重複 */
+    width: 24px;
+    height: 24px;
+}
+
+.selected {
+    color: #108554;
+    background: #b8fadd;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.middle-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.add-container {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+
+.todo-context {
+    min-width: 80%;
+    background: #d3e2f2;
+    border: none;
+    border-radius: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #414e6e;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.addnew {
+    /* background-image: url('../image/4677490.png'); */
+    /* background-size: cover;       確保圖片覆蓋整個元素 */
+    /* background-position: center;  將圖片置中 */
+    /* background-repeat: no-repeat; 禁止背景重複 */
+    /* width: 36px; */
+    /* height: 36px; */
+    border-radius: 50%;
+    background: #414e6e;
+    width: 36px;
+    height: 36px;
+    align-content: center;
+    text-align: center;
+    color: #d3e2f2;
+    font-size: 32px;
+    font-weight: 800;
+}

@@ -93,6 +93,12 @@ function Todos(email, res)
         })
 }
 
+function Close()
+{
+    connection.end()
+    connection = undefined
+}
+
 module.exports = 
 {
     connect: Connect,
@@ -101,4 +107,5 @@ module.exports =
     success: Success,
     connection: GetConnection,
     todos: Todos,
+    close: Close
 }

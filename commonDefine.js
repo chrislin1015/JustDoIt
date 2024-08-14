@@ -6,4 +6,10 @@ const header =
     'Content-Type': 'application/json'
 }
 
-module.exports = header;
+const SECRET_KEY = 'JustDoIt'
+
+module.exports = 
+{
+    header: header,
+    SECRET_KEY: SECRET_KEY
+}
