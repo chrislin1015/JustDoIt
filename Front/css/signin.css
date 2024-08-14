@@ -1,0 +1,154 @@
+/* container */
+.signin-container {
+    max-width: 400px;
+    margin: 0 auto;
+    background: rgb(251, 246, 255);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.top-container
+{
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+}
+
+.middle-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.foot-container {
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+}
+
+.password-container {
+    display: flex;
+
+}
+
+/* 圈圈的顏色 */
+.green-circle {
+    background: rgb(141, 214, 141);
+    border-radius: 50%;
+}
+
+.black-circle {
+    background: black;
+    border-radius: 50%;
+}
+
+/* 大圈圈的位置 */
+.bgct {
+    position: relative;
+    top: -220px;
+    left: -30px;
+}
+
+.bbct-1 {
+    position: relative;
+    top: -550px;
+    left: -250px;
+}
+
+.bbct-2 {
+    position: relative;
+    top: -950px;
+    left: 200px;
+}
+
+/* 圈圈的大小 */
+.big-circle {
+    width: 350px;
+    height: 350px;
+}
+
+.middle-circle {
+    width: 100px;
+    height: 100px;
+}
+
+.small-circle {
+    width: 50px;
+    height: 50px;
+}
+
+/* 小圈圈的位置 */
+.sgct {
+    position: relative;
+    bottom: -60px;
+    left: -90px;
+}
+
+.sbct {
+    position: relative;
+    bottom: -40px;
+    right: -70px;
+}
+
+/* 其他 */
+.forgot-password {
+    text-align: right;
+}
+
+.submit-circle {
+    position: relative;
+}
+
+.arrow-line {
+    width: 30px;
+    height: 4px;
+    background: white;
+    position: relative;
+    top: 23px;
+    left: 10px;
+    border-radius: 10px;
+}
+
+.arrow-top {
+    width: 20px;
+    height: 4px;
+    background:white;
+    position: relative;
+    top: 14px;
+    left: 23px;
+    transform: rotate(45deg);
+    border-radius: 10px;
+}
+
+.arrow-down {
+    width: 20px;
+    height: 4px;
+    background: white;
+    position: relative;
+    top: 20px;
+    left: 23px;
+    transform: rotate(-45deg);
+    border-radius: 10px;
+}
+
+.to-signup {
+    position: relative;
+    bottom: 20px;
+}
+
+.error-message {
+    text-align: center;
+    color: darkred;
+    font-weight: 700;
+}
+
+.input-password {
+    min-width: 92%;
+}
+
+.eye-icon {
+    min-width: 8%;
+}

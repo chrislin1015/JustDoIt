@@ -1,0 +1,23 @@
+# Workflow 的名稱
+name: GitHubActionTest
+
+# Workflow 觸發的方式
+on: workflow_dispatch
+
+# 開始定義 Job，每個 Workflow 至少一個 Job
+jobs:
+  # Job 的名稱
+  Action1:
+    # 在哪個 runner 上執行
+    runs-on: ubuntu-latest
+    # 定義 Job 的步驟
+    steps:
+      # 每個 step 以 - 開始，name 設定 step 的名稱，run 表示要運行的腳本
+      - name: clone repository
+        run: |
+          git clone https://github.com/chrislin1015/JustDoIt
+          cd JustDoIt
+      - name: install pytest
+        run: pip install pytest
+      - name: run pytest
+        run: pytest

@@ -1,0 +1,28 @@
+.order-top {
+    z-index: 100;
+}
+
+.order-middle {
+    z-index: 50;
+}
+
+.order-low {
+    z-index: 10;
+}
+
+.input-style {
+    background: rgb(251, 246, 255);
+    /* 移除所有邊框 */
+    border: none;
+    /* 只設置底部邊框 */
+    border-bottom: 1px solid #e7dfdf;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(141, 214, 141);
+}
+
+.hide {
+    display: none;
+}
