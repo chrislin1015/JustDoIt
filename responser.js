@@ -1,8 +1,8 @@
-const header = require('./commonDefine')
+const common = require('./commonDefine')
 
 function errorHandle(res, message)
 {
-    res.writeHead(400, header);
+    res.writeHead(400, common.header);
     res.write
     (
         JSON.stringify
@@ -18,7 +18,7 @@ function errorHandle(res, message)
 
 function successHandle(res, todos)
 {
-    res.writeHeader(200, header)
+    res.writeHeader(200, common.header)
     res.write
     (
         JSON.stringify

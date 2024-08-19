@@ -3,7 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>JustDoIt</title>
+    <link rel="stylesheet" href="../css/common.css" />
+    <link rel="stylesheet" href="../css/index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../js/index.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <div class="top-container">
+      <div class="left-menu">
+        <div class="reload-menu"></div>
+        <div class="today-menu selected">Today</div>
+        <div class="done-menu">Done</div>
+      </div>
+      <div class="logo">Just Do It</div>
+      <div class="right-menu">
+        <div class="log-out hide">
+          <a href="">Log Out</a>
+        </div>
+        <div class="signin">
+          <a href="./signin.html">Sign In</a>
+        </div>
+        <div class="signup">
+          <a href="./signup.html">Sign Up</a>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="middle-container">
+      <div class="add-container">
+        <input class="todo-context" type="text" placeholder="Add new task" />
+        <div class="addnew">+</div>
+      </div>
+    </div>
+    <hr />
+    <div class="todos-container">
+      <div class="todo-cell">
+        <div class="todo-title">to do something</div>
+        <div class="todo-date">2024/08/16</div>
+        <div class="due-date">2024/08/16</div>
+        <div class="check-box">v</div>
+        <div class="delete"></div>
+      </div>
+    </div>
+  </body>
 </html>

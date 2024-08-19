@@ -29,13 +29,16 @@ if (submit !== undefined)
                     'Content-Type': 'application/json'
                 }
             }).then (response => {
-                console.log('取得資料:', response.data)
+                const token = response.data.token
+                localStorage.setItem('authToken', token)
+                console.log('註冊成功:', token)
+                window.location.href = './index.html'
             }).catch (error => {
                 if (errorMessage !== undefined) {
                     errorMessage.classList.remove('hide')
                     errorMessage.textContent = error
                 }
-                console.error('取得資料失敗:', error);
+                console.error('註冊失敗:', error);
             })
 
         console.log(`name : ${inputName.value}} | user name : ${inputUserName.value} | password : ${inputPassword.value}`)

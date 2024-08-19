@@ -1,5 +1,12 @@
 //import { ValidateEmail, ValidatePassword, CreateDate } from '../../helper.js';
 
+function test()
+{
+    localStorage.setItem('authToken', "test 123")
+    console.log('登入成功，token:', 'test 123');
+    window.location.href = './index.html'
+}
+
 const submit = document.getElementsByClassName("submit-circle")
 submit[0].addEventListener("click", () => 
 {
@@ -33,15 +40,18 @@ submit[0].addEventListener("click", () =>
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {           
-            console.log('取得資料:', response.data);
+        .then(response => {
+            const token = response.data.token
+            localStorage.setItem('authToken', token)
+            console.log('登入成功，token:', token);
+            window.location.href = './index.html'
         })
         .catch(error => {
             if (errorMessage !== undefined) {
                 errorMessage.classList.remove('hide')
                 errorMessage.textContent = error//response.data.Message
             }
-            console.error('取得資料失敗:', error);
+            console.error('登入失敗:', error);
         });
 
     console.log(`user name : ${inputUsername.value} | password : ${inputPassword.value}`)
