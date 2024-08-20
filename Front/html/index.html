@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="../css/common.css" />
     <link rel="stylesheet" href="../css/index.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../js/todolist.js"></script>
     <script src="../js/index.js" defer></script>
+    <script src="../js/addnew.js" defer></script>
+    <script src="../js/logout.js" defer></script>
   </head>
   <body>
     <div class="top-container">
@@ -38,12 +41,11 @@
     </div>
     <hr />
     <div class="todos-container">
-      <div class="todo-cell">
-        <div class="todo-title">to do something</div>
-        <div class="todo-date">2024/08/16</div>
-        <div class="due-date">2024/08/16</div>
-        <div class="check-box">v</div>
-        <div class="delete"></div>
+      <div class="todo-cell hide">
+        <input class="checkbox-in-cell" type="checkbox" />
+        <div class="content-in-cell">to do something</div>
+        <div class="date-in-cell">2024/08/16</div>
+        <div class="delete-in-cell"></div>
       </div>
     </div>
   </body>
