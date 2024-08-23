@@ -2,45 +2,27 @@ console.log('index.js is load')
 
 const signin = document.querySelector('.signin')
 const signup = document.querySelector('.signup')
-const logout = document.querySelector('.log-out')
-const addnew = document.querySelector('.addnew')
+const todocell = document.querySelector('.todo-cell')
 
-// function isSignIn() {
-//     const token = localStorage.getItem('authToken')
-//     if (token === undefined || token === null)
-//         return false
-//     return true
-// }
-
-if (logout) {
-    logout.addEventListener("click", () => {
-        localStorage.removeItem('authToken')
-        window.location.reload()
-    })
+function sqlDateToYearMonthDay(sqlDate) {
+    const dateObject = new Date(sqlDate);
+    const year = dateObject.getFullYear(); // 2024
+    const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // 08 (月份從 0 開始，所以要 +1)
+    const day = dateObject.getDate().toString().padStart(2, '0'); // 10
+    const datePart = `${year}-${month}-${day}`;
+    return datePart
 }
 
-if (addnew) {
-    addnew.addEventListener('click', () => {
-        const token = localStorage.getItem('authToken')
-        if (token === undefined || token === null) return
-        const todoContext = document.querySelector('.todo-context')
-        if (todoContext.value.trim() === '') return
-
-        axios.post('http://localhost:3005/add', 
-            {
-                "content": todoContext.value
-            }, 
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            }).then (response => {
-                console.log('成功新增todo項目:', response.data);
-            }).catch (error => {
-                console.error('無法新增todo項目', error.response.data.message);
-            })
-    })
+function generateTodo(todo){
+    const clone = todocell.cloneNode(true)
+    todocell.parentNode.appendChild(clone)//insertBefore(clone, todocell.parentNode.firstChild);
+    clone.classList.remove('hide')
+    const contentInCell = clone.querySelector('.content-in-cell')
+    contentInCell.innerText = todo.content
+    const dateInCell = clone.querySelector('.date-in-cell')
+    dateInCell.innerText = sqlDateToYearMonthDay(todo.date)
+    const checkboxInCell = clone.querySelector('.checkbox-in-cell')
+    checkboxInCell.checked = todo.done
 }
 
 window.onload = function() {
@@ -57,10 +39,19 @@ window.onload = function() {
             }
         })
         .then(response => {
-            console.log('受保護的資源:', response.data);
+            console.log('取得 todo 清單:', response.data.Data);
+            clearTodolist()
+            response.data.Data.forEach(element => {
+                addTodolist(element)
+            });
+            const gettodo = getTodolist()
+            console.log(`details: ${JSON.stringify(gettodo, null, 2)}`);
+            gettodo.forEach(element => {
+                generateTodo(element)
+            });
         })
         .catch(error => {
-            console.error('無法取得受保護的資源', error.response.data.message);
+            console.error('無法取得 todo 清單', error.response.data.message);
         });
     } else {
         signin.classList.remove('hide')
