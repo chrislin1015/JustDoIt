@@ -132,7 +132,7 @@
     text-align: center;
     font-size: 16px;
     align-content: center;
-    color: #d3e2f2;;
+    color: #d3e2f2;
 }
 
 .delete-in-cell {
@@ -146,4 +146,9 @@
     background-image: url('../image/7711775.png');
     background-size: cover;
     background-position: center;
+}
+
+.done {
+    text-decoration: line-through !important; 
+    color: #d3e2f2;
 }
