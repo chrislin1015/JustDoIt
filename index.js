@@ -4,6 +4,7 @@ const responser = require('./responser')
 const loginProcess = require('./loginProcess')
 const todosProcess = require('./todosProcess')
 const jwt = require('jsonwebtoken')
+const { decode } = require('punycode')
 
 function ProcessPostData(method, res, post_data)
 {
@@ -73,7 +74,6 @@ function RequestLinstener(req, res)
                     if (error) {
                         responser.error(res, "Invalid Token")
                     } else {
-                        console.log('jwt ok')
                         try {
                             let json_data = JSON.parse(post_data)
                             json_data.email = decoded.email
@@ -118,8 +118,32 @@ function RequestLinstener(req, res)
             ProcessPostData(todosProcess.change, res, post_data)            
         })
     } else if (req.url === '/done' && req.method === 'PATCH') {
+        console.log('done')
         req.on('end', () => {
-            ProcessPostData(todosProcess.done, res, post_data)
+            const auth = req.headers['authorization']
+            if (auth) {
+                const token = auth.split(' ')[1]
+                jwt.verify(token, common.SECRET_KEY, (error, decoded) => {
+                    if (error) {
+                        responser.error(res, "Invalid Token")
+                    } else {
+                        try {
+                            console.log(post_data)
+                            let json_data = JSON.parse(post_data)
+                            console.log(json_data)
+                            json_data.email = decoded.email
+                            console.log(json_data)
+                            todosProcess.done(json_data, res)
+                        } catch (error) {
+                            console.log('error parse json')
+                            responser.error(res, error)
+                        }
+                    }
+                })
+            } else {
+                responser.error(res, 'No token provided')
+            }
+            //ProcessPostData(todosProcess.done, res, post_data)
         })
     }
 }
