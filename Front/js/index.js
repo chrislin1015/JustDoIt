@@ -18,7 +18,6 @@ function done(event) {
     if (token === null || token === undefined) return
 
     const todoid = event.target.parentNode.getAttribute('data-id')
-    console.log(event.target.checked)
     axios.patch('http://localhost:3005/done', 
         {
             'id': todoid,
@@ -41,6 +40,27 @@ function done(event) {
         })
 }
 
+function del(event) {
+    const token = localStorage.getItem('authToken')
+    if (token === null || token === undefined) return
+    console.log('token' + token)
+    const todoid = event.target.parentNode.getAttribute('data-id')
+    axios.delete('http://localhost:3005/delete', 
+        {
+            params: {
+                'id': todoid
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }).then (response => {
+            window.location.reload()
+        }).catch (error => {
+
+        })
+}
+
 function generateTodo(todo) {
     // clone 整個 todo DOM 元件
     const clone = todocell.cloneNode(true)
@@ -59,6 +79,14 @@ function generateTodo(todo) {
 
     // 註冊 done call back
     checkboxInCell.addEventListener('click', done)
+    
+    const deleteInCell = clone.querySelector('.delete-in-cell')
+    deleteInCell.addEventListener('click', del)
+
+    if (checkboxInCell.checked)
+        contentInCell.classList.add('done')
+    else
+        contentInCell.classList.remove('done')
 }
 
 window.onload = function() {

@@ -4,7 +4,7 @@ const responser = require('./responser')
 const loginProcess = require('./loginProcess')
 const todosProcess = require('./todosProcess')
 const jwt = require('jsonwebtoken')
-const { decode } = require('punycode')
+const url = require('url')
 
 function ProcessPostData(method, res, post_data)
 {
@@ -45,6 +45,9 @@ function RequestLinstener(req, res)
     req.on('data', (chunk) => {
             post_data += chunk
         })
+
+    console.log(req.method)
+    console.log(req.url)
 
     if (req.method === 'OPTIONS') {
         console.log('options')
@@ -109,17 +112,51 @@ function RequestLinstener(req, res)
             // }
             //ProcessPostData(todosProcess.add, res, post_data)
         })
-    } else if (req.url === '/delete' && req.method === 'DELETE') {
+    } else if (req.url.startsWith('/delete') && req.method === 'DELETE') {
+        console.log('delete')
         req.on('end', () => {
-            ProcessPostData(todosProcess.delete, res, post_data)
+            console.log(req.headers)
+            const auth = req.headers['authorization']
+            if (auth) {
+                const queryObject = url.parse(req.url, true).query
+                const id = queryObject.id;
+                if (id) {
+                    const token = auth.split(' ')[1]
+                    jwt.verify(token, common.SECRET_KEY, (error, decoded) => {
+                        console.log('jwt verify')
+                        if (error) {
+                            responser.error(res, 'Invalid Token')
+                        } else {
+                            try {
+                                const json_data = {
+                                    email: decoded.email,
+                                    id: id
+                                }
+                                todosProcess.delete(json_data, res)
+                                console.log('process done')
+                            } catch (error) {
+                                console.log('process error')
+                                responser.error(res, error)
+                            }
+                        }
+                    })
+                } else {
+                    responser.error(res, 'No todo it provided')
+                }
+                
+            } else {
+                console.log('No token provided')
+                responser.error(res, 'No token provided')
+            }
+            //ProcessPostData(todosProcess.delete, res, post_data)
         })
     } else if (req.url === '/change' && req.method === 'PATCH') {
         req.on('end', () => {
             ProcessPostData(todosProcess.change, res, post_data)            
         })
     } else if (req.url === '/done' && req.method === 'PATCH') {
-        console.log('done')
         req.on('end', () => {
+            console.log(req.headers)
             const auth = req.headers['authorization']
             if (auth) {
                 const token = auth.split(' ')[1]
@@ -128,14 +165,10 @@ function RequestLinstener(req, res)
                         responser.error(res, "Invalid Token")
                     } else {
                         try {
-                            console.log(post_data)
                             let json_data = JSON.parse(post_data)
-                            console.log(json_data)
                             json_data.email = decoded.email
-                            console.log(json_data)
                             todosProcess.done(json_data, res)
                         } catch (error) {
-                            console.log('error parse json')
                             responser.error(res, error)
                         }
                     }
@@ -143,7 +176,6 @@ function RequestLinstener(req, res)
             } else {
                 responser.error(res, 'No token provided')
             }
-            //ProcessPostData(todosProcess.done, res, post_data)
         })
     }
 }
