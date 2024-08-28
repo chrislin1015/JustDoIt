@@ -76,7 +76,6 @@ function Todos(email, res)
                 Fail(res, 'MySQL 連接失敗: ' + error.stack)
                 throw error
             }
-            console.log(results)
             let todosData = []
             results.forEach(element => 
                 {
