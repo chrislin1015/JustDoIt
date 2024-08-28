@@ -22,25 +22,25 @@ function ValidatePassword(password)
 
     if (!regexLettersAndNumbers.test(password))
     {
-        console.log("regexLettersAndNumbers");
+        console.log("必須包含英數字");
         return false
     }
 
     if (!reqexUpcase.test(password))
     {
-        console.log("reqexUpcase");
+        console.log("必須要有一個英文字大寫");
         return false
     }
 
     if (!reqexLowcase.test(password))
     {
-        console.log("reqexLowcase");
+        console.log("必須要有一個英文字小寫");
         return false
     }
 
     if (!reqexNumber.test(password))
     {
-        console.log("reqexNumber");
+        console.log("必須要有數字");
         return false
     }
 

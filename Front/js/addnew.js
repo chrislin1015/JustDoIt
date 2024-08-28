@@ -18,6 +18,7 @@ if (addnew) {
                 }
             }).then (response => {
                 console.log('成功新增todo項目:', response.data);
+                window.location.reload()
             }).catch (error => {
                 console.error('無法新增todo項目', error.response.data.message);
             })

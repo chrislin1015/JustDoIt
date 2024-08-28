@@ -1,12 +1,3 @@
-//import { ValidateEmail, ValidatePassword, CreateDate } from '../../helper.js';
-
-function test()
-{
-    localStorage.setItem('authToken', "test 123")
-    console.log('登入成功，token:', 'test 123');
-    window.location.href = './index.html'
-}
-
 const submit = document.getElementsByClassName("submit-circle")
 submit[0].addEventListener("click", () => 
 {
@@ -20,25 +11,13 @@ submit[0].addEventListener("click", () =>
     }
     errorMessage.classList.add('hide')
 
-    // if (!ValidateEmail(input_username[0].value))
-    // {
-    //     console.log('email formate error')
-    //     return;
-    // }
-
-    // if (!ValidatePassword(input_password[0].value))
-    // {
-    //     console.log('email formate error')
-    //     return;
-    // }
-
-    axios.post('http://127.0.0.1:3005/signin', {
+    axios.post('http://127.0.0.1:3005/signin', 
+        {
             "email": inputUsername.value,
             "password": inputPassword.value,
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        }, 
+        {
+            headers: getHeaders()
         })
         .then(response => {
             const token = response.data.token

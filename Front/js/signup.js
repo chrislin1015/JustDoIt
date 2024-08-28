@@ -1,5 +1,4 @@
 const submit = document.querySelector(".submit-circle")
-console.log(submit)
 if (submit !== undefined)
 {
     submit.addEventListener("click", () =>
@@ -25,9 +24,7 @@ if (submit !== undefined)
                 "name": inputName.value   
             },
             {
-                Headers: {
-                    'Content-Type': 'application/json'
-                }
+                headers: getHeaders()
             }).then (response => {
                 const token = response.data.token
                 localStorage.setItem('authToken', token)
